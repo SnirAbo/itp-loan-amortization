@@ -5,6 +5,7 @@ import { ResultsPanel } from '@/components/ResultsPanel'
 import { AmortizationTable } from '@/components/AmortizationTable'
 import { ChartsPanel } from '@/components/ChartsPanel'
 import { CopyLinkButton } from '@/components/CopyLinkButton'
+import { ExportButtons } from '@/components/ExportButtons'
 import { compute } from '@/lib/amortization'
 import { encodeQuery, decodeQuery } from '@/lib/url'
 import { validateAll } from '@/lib/validation'
@@ -15,7 +16,6 @@ export default function App() {
   const [termYears, setTermYears] = useState<string>('30')
   const [startDate, setStartDate] = useState<string>('')
 
-  // On load, decode query if present
   useEffect(() => {
     const decoded = decodeQuery(new URLSearchParams(location.search))
     if (decoded.ok && decoded.parsed) {
@@ -27,7 +27,6 @@ export default function App() {
     }
   }, [])
 
-  // Sync to URL on change (debounced via LoanInputForm)
   useEffect(() => {
     const qp = encodeQuery({ principal, apr, termYears, startDate })
     const url = `${location.pathname}?${qp}`
@@ -70,8 +69,9 @@ export default function App() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-4">
             <ResultsPanel validation={validation} result={result} />
+            <ExportButtons result={result} />
           </div>
           <div className="lg:col-span-2">
             <ChartsPanel result={result} />
